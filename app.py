@@ -51,6 +51,19 @@ def delete(id):
         return 'There was a problem deleting that task'
 
 
+@app.route('/clear_completed')
+def clear_completed():
+    try:
+        completed_tasks = Todo.query.filter_by(completed=True).all()
+        for task in completed_tasks:
+            db.session.delete(task)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return 'There was a problem clearing completed tasks'
+
+
+
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
     task = Todo.query.get_or_404(id)
@@ -58,6 +71,7 @@ def update(id):
     if request.method == 'POST':
         task.content = request.form['content']
         task.due_date = datetime.strptime(request.form['due_date'], '%Y-%m-%dT%H:%M')
+        task_category = request.form['category']
         task.completed = 'completed' in request.form
         task.completion_time = datetime.utcnow() if task.completed else None
 

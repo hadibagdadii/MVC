@@ -61,18 +61,34 @@
         {% endfor %}
     </table>
 
+    <!-- ... -->
     <h2>Completed Tasks</h2>
     <table>
         <tr>
             <th>Task</th>
             <th>Completion Time</th>
+            <th>Actions</th>
         </tr>
         {% for task in completed_tasks %}
         <tr>
             <td>{{ task.content }}</td>
-            <td>{{ task.completion_time }}</td>
+            <td>{{ task.completion_time.strftime('%Y-%m-%d %I:%M %p') }}</td>
+            <td>
+                <a href="{{ url_for('delete', id=task.id) }}">Delete</a>
+            </td>
         </tr>
         {% endfor %}
+        {% if completed_tasks %}
+        <tr>
+            <td colspan="3">
+                <form action="/clear_completed" method="POST">
+                    <button type="submit" class="clear-button">Clear All Completed Tasks</button>
+                </form>
+            </td>
+        </tr>
+        {% endif %}
     </table>
+    <!-- ... -->
+
 </div>
 {% endblock %}
